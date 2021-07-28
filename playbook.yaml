@@ -6,7 +6,7 @@
     become_user: root
     apt: 
     #To install specific version
-      name: nginx=1.18.0-6ubuntu8
+      name: nginx=1.18.0-0ubuntu1
       state: present
     #To specify version in regular expression
      #name: nginx=1.17* 
