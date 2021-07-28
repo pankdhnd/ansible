@@ -16,7 +16,8 @@ Above parameter might be commented, so you might want to uncomment it.
 `ansible-playbook -i hosts <playbook-name.yaml>`
 
 ## To execute tasks as root user, you will have to switch to root from the playbook, for that you have to use 'become' in your playbook yaml. below is the example of such playbook:
-```- name: Deploy and configure nginx web server
+```yaml
+- name: Deploy and configure nginx web server
   hosts: local
   tasks: 
   - name: Install nginx server
