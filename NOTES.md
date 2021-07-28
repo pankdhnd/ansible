@@ -1,7 +1,7 @@
 ## Disable ssh authenticity check for ansible. Recommended for cases where servers are short lived
 ### Global Configuration
 1. Edit /etc/ansible/ansible.cfg
-2. search for parameter 'host_key_checking' and set it to false
+2. search for parameter '''host_key_checking''' and set it to false
    'host_key_checking = False'
 
 Above parameter might be commented, so you might want to uncomment it.
