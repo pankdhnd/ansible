@@ -13,7 +13,9 @@ Above parameter might be commented, so you might want to uncomment it.
 3. Save and close.
 
 ## To run ansible playbook
-`ansible-playbook -i hosts <playbook-name.yaml>`
+```bash
+ansible-playbook -i hosts <playbook-name.yaml>
+```
 
 ## To execute tasks as root user, you will have to switch to root from the playbook, for that you have to use 'become' in your playbook yaml. below is the example of such playbook:
 
@@ -26,7 +28,9 @@ Above parameter might be commented, so you might want to uncomment it.
     become_user: root
     apt: 
       name: nginx
-      state: latest```
-
+      state: latest
+   ```
 ## If you have any password set for root user, then you have to provide -K parameter while running the playbook so that you will be prompted to input the passowrd  
-`ansible-playbook -i hosts <playbook-name.yaml> -K`
+```bash
+ansible-playbook -i hosts <playbook-name.yaml> -K
+```
