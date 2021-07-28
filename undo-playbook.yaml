@@ -1,0 +1,15 @@
+- name: Uninstall nginx web server
+  hosts: local
+  tasks: 
+  - name: Remove nginx server
+    become: True
+    become_user: root
+    apt: 
+      name: nginx
+      state: absent
+  - name: Check if nginx server is stopped/not found
+    become: True
+    become_user: root
+    service:
+      name: nginx
+      state: stopped
