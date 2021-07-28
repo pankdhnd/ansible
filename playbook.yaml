@@ -1,0 +1,11 @@
+- name: Deploy and configure nginx web server
+  hosts: local,aws
+  tasks: 
+  - name: Install nginx server
+    apt: 
+      name: nginx
+      state: latest
+  - name: Start nginx server
+    service:
+      name: nginx
+      state: started
