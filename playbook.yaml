@@ -5,12 +5,14 @@
     become: True
     become_user: root
     apt: 
-    #To install specific version
-      name: nginx=1.18.0-0ubuntu1
-      state: present
     #To specify version in regular expression
-     #name: nginx=1.17* 
- #To install latest version of nginx
+      name: nginx=1.18*
+      state: present
+
+    #To install specific version version
+     #name: nginx=nginx=1.18.0-0ubuntu1 
+     #state: present
+    #To install latest version of nginx
       #name: nginx
       #state: latest
   - name: Start nginx server
