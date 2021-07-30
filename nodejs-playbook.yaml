@@ -1,13 +1,11 @@
  - name: Deploy NodeJs application on remote machine
    hosts: local
+   become: True
+   become_user: root   
    tasks:
-   - name: Perform sudo apt update
-     become: True
-     become_user: root
+   - name: Perform sudo apt update     
      apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
    - name: Insatll NodeJs and npm
-     become: True
-     become_user: root
      apt:
        pkg:
        - nodejs
@@ -16,10 +14,13 @@
 # Deploy nodejs application tar file
  - name: Deploy NodeJs application
    hosts: local
+   vars:
+   - NODE_PACKAGE_PATH: /home/pankaj/data/ 
+   - NODE_PACKAGE_NAME: nodejs-app-1.0.0.tgz
    tasks:
    - name: Copy and unpack tar file
      unarchive:
-       src: /home/pankaj/data/nodejs-app-1.0.0.tgz #Source is local machine. Unarchieve will copy file to remote, and will then un-tar it.
+       src: "{{NODE_PACKAGE_PATH}}{{NODE_PACKAGE_NAME}}"   #Source is local machine. Unarchieve will copy file to remote, and will then un-tar it.
        dest: /home/pankaj
    - name: Install dependencies using npm
      npm:
