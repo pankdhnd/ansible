@@ -85,7 +85,7 @@ ansible-playbook -i hosts <playbook-name.yaml> -K
 tasks:
   - name: Copy and unpack tar file
     unarchive:
-      src: /home/pankaj/data/nodejs-app-1.0.0.tgz   #Source is local machine. Unarchieve will copy file to remote, and will then untar it.
+      src: /home/pankaj/data/nodejs-app-1.0.0.tgz   #Source is local machine. Unarchieve will copy file to remote, and will then un-tar it.
       dest: /home/pankaj
 ```
 

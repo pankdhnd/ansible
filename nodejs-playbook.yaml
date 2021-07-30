@@ -13,28 +13,25 @@
        - nodejs
        - npm
 
----
 # Deploy nodejs application tar file
-- name: Deploy NodeJs application
-  hosts: local
-  tasks:
-  - name: Copy and unpack tar file
-    unarchive:
-      src: /home/pankaj/data/nodejs-app-1.0.0.tgz   #Source is local machine. Unarchieve will copy file to remote, and will then untar it.
-      dest: /home/pankaj
-  - name: Install dependencies using npm
-    community.general.npm:
-      path: /home/pankaj/package
-  - name: Start the application
-    ansible.builtin.command: 
-      chdir: /home/pankaj/package
-      cmd: node server
-    async: 1000  #To run command in ansynchronous manner. Otherwise our playbook execution would never stop.
-    poll: 0
-  - name: Check if application is running
-    ansible.builtin.shell:
-      cmd: ps aux | grep node
-      register: app_status #We defined a variable here, which will store the output of cmd. As the command is executed on remote, it is not possible to check its status directly.
-  - debug: msg={{app_status
-  }}  
-    
+ - name: Deploy NodeJs application
+   hosts: local
+   tasks:
+   - name: Copy and unpack tar file
+     unarchive:
+       src: /home/pankaj/data/nodejs-app-1.0.0.tgz #Source is local machine. Unarchieve will copy file to remote, and will then un-tar it.
+       dest: /home/pankaj
+   - name: Install dependencies using npm
+     npm:
+       path: /home/pankaj/package
+   - name: Start the application
+     command: 
+       chdir: /home/pankaj/package/app
+       cmd: node server.js
+     async: 1000  #To run command in ansynchronous manner. Otherwise our playbook execution would never stop.
+     poll: 0
+   - name: Check if application is running
+     shell:
+       cmd: ps aux | grep node
+     register: app_status #We defined a variable here, which will store the output of cmd. As the command is executed on remote, it is not possible to check its status directly.
+   - debug: msg={{app_status.stdout_lines}}   
