@@ -1,0 +1,15 @@
+---
+- name: Create user on linux machine
+  hosts: local
+  tasks:
+  - name: Add new user
+    become: True
+    become_user: root
+    user:
+      name: test1
+      create_home: no
+      expires: -1
+      #remove: True
+      #state: absent
+    register: temp
+  - debug: msg={{temp}}

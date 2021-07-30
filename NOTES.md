@@ -91,3 +91,74 @@ tasks:
 
 ### Command module vs Shell module
 ```Command module just executes the command on remote machine, but if you want to use shell environment variables, pipe operators, redirect operators or boolean operators then we must use shell module. The shell module executes command inside the shell. But command module is more secure becuase it run commands in isolated manner and does not run directly on shell. The shell module is more open to use and hence vulnerable to shell injection. So for security concerns, better to use command wherever we can```
+
+### Variable usage syntax
+While parameterizing, if a variable is being used immediately after : syntax in yaml, then we have to enclose variable into quotes. This happens becuase yaml considers it as a yaml dictionary syntax. Example below:
+```yaml
+tasks:
+   - name: Copy and unpack tar file
+     unarchive:
+       src: "{{PATH}}"
+       dest: /home/pankaj
+```
+But if the variable lies somewhere far from the : symbol, then there is no need for quotes. Example: 
+```yaml
+tasks:
+   - name: Copy and unpack tar file
+     unarchive:
+       src: /home/pankaj/data/{{FILE_NAME}} 
+       dest: /home/pankaj
+```
+
+### We can declare/define variables in the playbook with vars. Example below:
+```yaml
+ - name: Deploy NodeJs application on remote machine
+   hosts: local
+   become: True
+   become_user: root
+   vars:
+   - location: /home/pankaj/package
+   - filename: testfile.tgz
+   tasks:
+   - name: Perform sudo apt update     
+     apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+   - name: Insatll NodeJs and npm
+     apt:
+       pkg:
+       - nodejs
+       - npm
+```
+
+### We can also pass the variables from command line using -e flag. So we don't have to define them with vars in the playbook. Example:
+```bash
+$ ansible-playbook -i hosts playbook.yaml -e "location=/home/pankaj/data filename=abcd.tgz"
+```
+```This approach of passing variables from command line is very useful in automated pipeline where we can pass arguments runtime without modifying playbook```
+
+### We can also pass variables from a file, just like we do in terraform
+```We can name the variables file whatever we can, and we have to specify each variable and value as key pair on new line. The variable file accepts yaml syntax
+so instead of "=" we have to use ":". We can either keep the file extension blank or set it to yaml. Then we have to mention the variable file name under vars_file. Example below where variables file name is project_vars:
+```
+```yaml
+ - name: Deploy NodeJs application on remote machine
+   hosts: local
+   become: True
+   become_user: root
+   vars_file:
+   - project_vars
+   tasks:
+   - name: Perform sudo apt update     
+     apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+   - name: Insatll NodeJs and npm
+     apt:
+       pkg:
+       - nodejs
+       - npm
+```
+
+Sample variables file contents
+```yaml
+version: 1.0.0
+location: /home/pankaj/data
+linux_user_name: testuser
+```
