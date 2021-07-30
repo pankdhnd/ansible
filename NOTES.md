@@ -12,6 +12,11 @@ Above parameter might be commented, so you might want to uncomment it.
    `host_key_checking` = False
 3. Save and close.
 
+### Simple connectivity check using ping
+```bash
+ansible all -i <inventory file name> -m ping
+```
+
 ### To run ansible playbook
 ```bash
 ansible-playbook -i hosts <playbook-name.yaml>
@@ -30,7 +35,59 @@ ansible-playbook -i hosts <playbook-name.yaml>
       name: nginx
       state: latest
    ```
+
 ### If you have any password set for root user, then you have to provide -K parameter while running the playbook so that you will be prompted to input the passowrd  
 ```bash
 ansible-playbook -i hosts <playbook-name.yaml> -K
 ```
+
+### Instead of writing each module command on new line, we can also club it as given below example:
+```yaml
+ - name: Deploy NodeJs application on remote machine
+   hosts: local
+   tasks:
+   - name: Perform sudo apt update
+     become: True
+     become_user: root
+     apt: update_cache=yes force_apt_get=yes
+```
+
+### To install multiple packages, we can provide a list of packages in the playbook as given below. Refer documentation on Ansible website to know more
+```yaml
+   - name: Instll NodeJs and npm
+     become: True
+     become_user: root
+     apt:
+       pkg:
+       - nodejs
+       - npm
+```
+### Copy module to copy a file from local machine to remote
+```yaml
+  tasks:
+  - name: Copy the tar file on remote
+    copy:
+      src: /home/pankaj/data/nodejs-app-1.0.0.tgz
+      dest: /home/pankaj   #Optionally we can specify a filename here. If the filename is different from the source filename, then module will rename it after copy
+```
+
+### Unarchieve module to untar the tarballs
+```yaml
+  - name: Unpack tar file
+    unarchive:
+      src: /home/pankaj/nodejs-app-1.0.0.tgz
+      dest: /home/pankaj   
+      remote_src: yes      #specifies that the package to be unarchieved is located on remote machine, otherise it look for the pckage on local machine
+```
+
+### We can perform copy and unarchieve both operations in a single task using unarchieve module as below
+```yaml
+tasks:
+  - name: Copy and unpack tar file
+    unarchive:
+      src: /home/pankaj/data/nodejs-app-1.0.0.tgz   #Source is local machine. Unarchieve will copy file to remote, and will then untar it.
+      dest: /home/pankaj
+```
+
+### Command module vs Shell module
+```Command module just executes the command on remote machine, but if you want to use shell environment variables, pipe operators, redirect operators or boolean operators then we must use shell module. The shell module executes command inside the shell. But command module is more secure becuase it run commands in isolated manner and does not run directly on shell. The shell module is more open to use and hence vulnerable to shell injection. So for security concerns, better to use command wherever we can```
