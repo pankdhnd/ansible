@@ -1,0 +1,3 @@
+MAIN_PATH: /home/ansible
+NODE_PACKAGE_LOCAL_PATH: /home/pankaj/data/ 
+NODE_PACKAGE_NAME: nodejs-app-1.0.0.tgz
