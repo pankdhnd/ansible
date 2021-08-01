@@ -14,10 +14,8 @@
 # Deploy nodejs application tar file
  - name: Deploy NodeJs application
    hosts: local
-   vars:
-   - MAIN_PATH: /home/ansible
-   - NODE_PACKAGE_LOCAL_PATH: /home/pankaj/data/ 
-   - NODE_PACKAGE_NAME: nodejs-app-1.0.0.tgz
+   vars_file:
+   - project_vars.yaml
    tasks:
    - name: Copy and unpack tar file
      unarchive:

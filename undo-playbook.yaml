@@ -1,11 +1,11 @@
 - name: Uninstall nginx web server
   hosts: local
+  become: True
+  become_user: root
   vars:
   - MAIN_PATH: /home/ansible
   tasks:
   - name: Stop nginx server
-    become: True
-    become_user: root
     service:
       name: nginx
       state: stopped
@@ -19,4 +19,9 @@
     file:
       state: absent
       path: "{{MAIN_PATH}}/package"
-    
+  - name: Remove nodejs and npm server
+    apt:
+       pkg:
+       - nodejs
+       - npm
+       state: absent
