@@ -1,0 +1,39 @@
+ - name: Deploy NodeJs application on remote machine
+   hosts: local
+   become: True
+   become_user: root
+   tasks:
+   - name: Perform sudo apt update     
+     apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+   - name: Insatll NodeJs and npm
+     apt:
+       pkg:
+       - nodejs
+       - npm
+
+# Deploy nodejs application tar file
+ - name: Deploy NodeJs application
+   hosts: local
+   vars:
+   - MAIN_PATH: /home/ansible
+   - NODE_PACKAGE_LOCAL_PATH: /home/pankaj/data/
+   - NODE_PACKAGE_NAME: BasicExpressSite-master.zip
+   tasks:
+   - name: Copy and unpack tar file
+     unarchive:
+       src: "{{NODE_PACKAGE_LOCAL_PATH}}{{NODE_PACKAGE_NAME}}"   #Source is local machine. Unarchieve will copy file to remote, and will then un-tar it.
+       dest: "{{MAIN_PATH}}"
+   - name: Install dependencies using npm
+     npm:
+       path: "{{MAIN_PATH}}/BasicExpressSite-master"
+   - name: Start the application
+     command: 
+       chdir: "{{MAIN_PATH}}/BasicExpressSite-master"
+       cmd: node app.js
+     async: 1000  #To run command in ansynchronous manner. Otherwise our playbook execution would never stop.
+     poll: 0
+   - name: Check if application is running
+     shell:
+       cmd: ps aux | grep node
+     register: app_status #We defined a variable here, which will store the output of cmd. As the command is executed on remote, it is not possible to check its status directly.
+   - debug: msg={{app_status.stdout_lines}}   
